@@ -164,7 +164,7 @@ npm run lint -- --fix
 │   ├── filters                # 全局 filter
 │   ├── icons                  # 项目所有 svg icons
 │   ├── lang                   # 国际化 language
-│   ├── layout                 # 全局 layout
+│   ├── layout                 # 全局 layout，后台布局
 │   ├── router                 # 路由
 │   ├── store                  # 全局 store管理
 │   ├── styles                 # 全局样式
@@ -183,3 +183,33 @@ npm run lint -- --fix
 ├── postcss.config.js          # postcss 配置
 └── package.json               # package.json
 ```
+
+## 开发配置
+
+### 移除mock-data
+
+待后台接口开发完成，逐步移除原先的mock接口
+vue.config.js 中devServer 配置下删除before:require('./mock/mock-server.js')'
+代理配置:
+```
+proxy:{
+  '/api':{ 
+    target:'线上或者本地的路径'，
+    pathRewrite：{
+       "^/api": "/api"
+    }
+  }
+}
+详见webpack proxy配置：https://www.webpackjs.com/configuration/dev-server/#devserver-proxy
+
+//main.js 中移除以下代码，线上环境不需使用mockjs 数据
+if (process.env.NODE_ENV === 'production') {
+  const { mockXHR } = require('../mock')
+  mockXHR()
+}
+```
+
+### 关于页面转场动画
+
+在/src/layout/component/appMain.vue 修改页面之间切换动画 transition中的name,不使用动画则去除
+

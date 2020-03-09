@@ -41,6 +41,7 @@ export default {
     dragTable: 'Arrastrar tabla',
     inlineEditTable: 'Editor',
     complexTable: 'Complex Table',
+    componentTable: 'Component Table',
     tab: 'Pestaña',
     form: 'Formulario',
     createArticle: 'Crear artículo',

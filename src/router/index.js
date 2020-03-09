@@ -8,6 +8,7 @@ import Layout from '@/layout'
 
 /* Router Modules */
 import nestedRouter from './modules/nested'
+import tableRouter from './modules/table'
 /**
  * constantRoutes
  * a base page that does not have permission requirements
@@ -81,19 +82,7 @@ export const constantRoutes = [
 export const asyncRoutes = [
   /** when your routing map is too long, you can split it into small modules **/
   nestedRouter,
-
-  {
-    path: '/tab',
-    component: Layout,
-    children: [
-      {
-        path: 'index',
-        component: () => import('@/views/tab/index'),
-        name: 'Tab',
-        meta: { title: 'tab', icon: 'tab' }
-      }
-    ]
-  },
+  tableRouter,
   {
     path: '/system',
     component: Layout,

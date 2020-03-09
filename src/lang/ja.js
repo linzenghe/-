@@ -41,6 +41,7 @@ export default {
     dragTable: 'Drag Table',
     inlineEditTable: 'Inline Edit Table',
     complexTable: 'Complex Table',
+    componentTable: 'Component Table',
     tab: 'Tab',
     form: 'フォーム',
     createArticle: '投稿作成',
