@@ -4,7 +4,7 @@
       id="iTable"
       v-loading.iTable="options.loading"
       :height="options.height"
-      :data="tableData"
+      :data="data"
       :border="options.border"
       :cell-style="options.cellStyle"
       @row-click="handleRowClick"
@@ -49,12 +49,12 @@
         v-if="operates.list.filter(_x=>_x.show === true).length > 0"
       >
         <template slot-scope="scope">
-          <span v-for="(btn, key) in operates.list" style="margin: 0 4px;">
+          <span v-for="(btn, key) in operates.list" style="margin: 0 4px;" :key="key">
             <el-button
               v-if="btn.show"
               :type="btn.type"
               size="mini"
-              :disabled="btn.disabled"
+              :disabled="btn.disabled(key,scope.row)"
               :plain="btn.plain"
               @click.native.prevent="btn.method(key,scope.row)"
             >{{ btn.label }}
@@ -81,10 +81,9 @@
 </template>
 <!--endregion-->
 <script>
-  import pagination from '../Pagination'
   export default {
     props: {
-      tableData: {
+      data: {
         type: Array,
         default: []
       }, // 数据列表
@@ -107,7 +106,6 @@
     },
     //组件
     components: {
-      pagination,
       expandDom: {
         functional: true,
         props: {
@@ -119,7 +117,7 @@
             default: null
           }
         },
-        render: (h, ctx) => {
+        render: (h, ctx) => {  //作用渲染视图，相当于template
           const params = {
             row: ctx.props.row,
             index: ctx.props.index
@@ -153,15 +151,11 @@
         this.$emit("handleRowClick", val);
       },
       handleSizeChange(size){
-
+        this.$$emit('handleSizeChange',size);
       },
       /*切换页码*/
       handleIndexChange(current){
         this.$emit('getTableData',current);
-      },
-      // 显示 表格操作弹窗
-      showActionTableDialog() {
-        this.$emit("handelAction");
       }
     }
   };
