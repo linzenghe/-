@@ -1,12 +1,11 @@
 <template>
-  <div class="filter-container">
-    <el-form :inline="filterConfig.inline">
-      <el-row :gutter="filterConfig.gutter">
+  <el-form :inline="formConfig.inline" :label-position="formConfig.labelPosition" :class="formConfig.class" :label-width="formConfig.labelWidth?formConfig.labelWidth:'80px'" :ref='formConfig.ref' :model='value' :rules='rules' :style='formConfig.style'>
+      <el-row :gutter="formConfig.gutter">
         <slot name="formItem"></slot>
         <el-col
-          v-for="(item, index) in filterConfig.filterList"
+          v-for="(item, index) in formConfig.formItemList"
           :key="item.prop"
-          :span="item.col ? item.col : filterConfig.col"
+          :span="item.col ? item.col : formConfig.col"
         >
           <el-form-item :label="item.label" :prop="item.prop">
             <!-- input type: text | textarea | password-->
@@ -145,36 +144,38 @@
             />
           </el-form-item>
         </el-col>
-        <el-col :span="filterConfig.operateCol ? filterConfig.operateCol : filterConfig.col">
+        <el-col :span="formConfig.operateCol ? formConfig.operateCol : formConfig.col">
           <el-form-item>
+            <!-- button -->
             <el-button
-              v-for="(item,index) in filterConfig.operates" :key="index"
+              v-for="(item,index) in formConfig.operates" :key="index"
               :type="item.type"
               :size="item.size"
               :disabled="item.disabled"
               :plain="item.plain"
               :icon="item.icon"
-              @click.native.prevent="item.method ? item.method(item, index) : ''"
+              @click.native.prevent="item.method ? item.method(formItemList, item, index) : ''"
               >{{ item.buttonLabel }}
             </el-button>
             <slot name="operate"></slot>
           </el-form-item>
         </el-col>
-        
       </el-row>
     </el-form>
-  </div>
 </template>
 <script>
 export default {
   props: {
-    filterConfig: {
+    formConfig: {
       type: Object,
       required: true
     },
     value: {
       type: Object,
       required: true
+    },
+    rules:{
+      type: Object
     }
   },
   computed: {},
@@ -185,7 +186,7 @@ export default {
     setDefaultValue (){
       const formData = {...this.value};
       // 设置默认值
-      this.filterConfig.filterList.forEach(({ key, value }) => {
+      this.formConfig.formItemList.forEach(({ key, value }) => {
         if (formData[key] === undefined || formData[key] === null) {
           formData[key] = value;
         }

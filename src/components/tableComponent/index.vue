@@ -49,12 +49,13 @@
         v-if="operates.list.filter(_x=>_x.show === true).length > 0"
       >
         <template slot-scope="scope">
-          <span v-for="(btn, key) in operates.list" style="margin: 0 4px;" :key="key">
+          <span v-for="(btn, key) in operates.list"  :key="key">
             <el-button
-              v-if="btn.show"
+              style="margin: 0 4px;"
+              v-if="(typeof btn.show == 'function')?btn.show(key,scope.row):btn.show"
               :type="btn.type"
               size="mini"
-              :disabled="btn.disabled(key,scope.row)"
+              :disabled="(typeof btn.disabled == 'function')?btn.disabled(key,scope.row):btn.disabled"
               :plain="btn.plain"
               @click.native.prevent="btn.method(key,scope.row)"
             >{{ btn.label }}
@@ -69,6 +70,7 @@
       v-if="options.pagination"
       :total="pagination.total"
       :page-sizes="[10, 20, 50]"
+      :page-size.sync="pagination.limit"
       :current-page.sync="pagination.page"
       layout="total, sizes, prev, pager, next, jumper"
       @size-change="handleSizeChange"
@@ -155,7 +157,7 @@
       },
       /*切换页码*/
       handleIndexChange(current){
-        this.$emit('getTableData',current);
+        this.$emit('handleIndexChange',current);
       }
     }
   };

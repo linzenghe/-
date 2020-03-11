@@ -1,131 +1,12 @@
 <template>
   <div class="app-container">
-    <div class="filter-container">
-      <el-input
-        v-model="listQuery.title"
-        :placeholder="$t('table.title')"
-        style="width: 200px;"
-        class="filter-item"
-        @keyup.enter.native="handleFilter"
-      />
-      <el-select
-        v-model="listQuery.importance"
-        :placeholder="$t('table.importance')"
-        clearable
-        style="width: 90px"
-        class="filter-item"
-      >
-        <el-option v-for="item in importanceOptions" :key="item" :label="item" :value="item" />
-      </el-select>
-      <el-select
-        v-model="listQuery.type"
-        :placeholder="$t('table.type')"
-        clearable
-        class="filter-item"
-        style="width: 130px"
-      >
-        <el-option
-          v-for="item in calendarTypeOptions"
-          :key="item.key"
-          :label="item.display_name+'('+item.key+')'"
-          :value="item.key"
-        />
-      </el-select>
-      <el-select
-        v-model="listQuery.sort"
-        style="width: 140px"
-        class="filter-item"
-        @change="handleFilter"
-      >
-        <el-option
-          v-for="item in sortOptions"
-          :key="item.key"
-          :label="item.label"
-          :value="item.key"
-        />
-      </el-select>
-      <el-button
-        v-waves
-        class="filter-item"
-        type="primary"
-        icon="el-icon-search"
-        @click="handleFilter"
-      >{{ $t('table.search') }}</el-button>
-      <el-button
-        class="filter-item"
-        style="margin-left: 10px;"
-        type="primary"
-        icon="el-icon-edit"
-        @click="handleCreate"
-      >{{ $t('table.add') }}</el-button>
-      <el-button
-        v-waves
-        :loading="downloadLoading"
-        class="filter-item"
-        type="primary"
-        icon="el-icon-download"
-        @click="handleDownload"
-      >{{ $t('table.export') }}</el-button>
-      <el-checkbox
-        v-model="showReviewer"
-        class="filter-item"
-        style="margin-left:15px;"
-        @change="tableKey=tableKey+1"
-      >{{ $t('table.reviewer') }}</el-checkbox>
-    </div>
-  
-    <filter-panel :filterOption='filterOption' :filterForm='filterForm'></filter-panel>
+    
+    <!-- 查询组件 -->
+    <filter-panel :filterConfig="filterConfig" :value='listQuery'/>  
+
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
-      <el-form
-        ref="dataForm"
-        :rules="rules"
-        :model="temp"
-        label-position="left"
-        label-width="70px"
-        style="width: 400px; margin-left:50px;"
-      >
-        <el-form-item :label="$t('table.type')" prop="type">
-          <el-select v-model="temp.type" class="filter-item" placeholder="Please select">
-            <el-option
-              v-for="item in calendarTypeOptions"
-              :key="item.key"
-              :label="item.display_name"
-              :value="item.key"
-            />
-          </el-select>
-        </el-form-item>
-        <el-form-item :label="$t('table.date')" prop="timestamp">
-          <el-date-picker
-            v-model="temp.timestamp"
-            type="datetime"
-            placeholder="Please pick a date"
-          />
-        </el-form-item>
-        <el-form-item :label="$t('table.title')" prop="title">
-          <el-input v-model="temp.title" />
-        </el-form-item>
-        <el-form-item :label="$t('table.status')">
-          <el-select v-model="temp.status" class="filter-item" placeholder="Please select">
-            <el-option v-for="item in statusOptions" :key="item" :label="item" :value="item" />
-          </el-select>
-        </el-form-item>
-        <el-form-item :label="$t('table.importance')">
-          <el-rate
-            v-model="temp.importance"
-            :colors="['#99A9BF', '#F7BA2A', '#FF9900']"
-            :max="3"
-            style="margin-top:8px;"
-          />
-        </el-form-item>
-        <el-form-item :label="$t('table.remark')">
-          <el-input
-            v-model="temp.remark"
-            :autosize="{ minRows: 2, maxRows: 4}"
-            type="textarea"
-            placeholder="Please input"
-          />
-        </el-form-item>
-      </el-form>
+      
+      <form-panel ref='formPanel' :formConfig="formConfig" :value="temp" :rules="rules"></form-panel>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">{{ $t('table.cancel') }}</el-button>
         <el-button
@@ -135,17 +16,17 @@
       </div>
     </el-dialog>
 
+    <!-- 表格组件 -->
     <table-component
       :data="list"
-      @handleRowClick="handleRowClick"
-      @handleSelectionChange="handleSelectionChange"
       :options="options"
-      @getTableData="getTableData"
       :pagination="listQuery"
       :columns="columns"
       :operates="operates"
+      @handleRowClick="handleRowClick"
+      @handleSelectionChange="handleSelectionChange"
       @handleIndexChange="handleIndexChange"
-    ></table-component>
+    />
 
     <el-dialog :visible.sync="dialogPvVisible" title="Reading statistics">
       <el-table :data="pvData" border fit highlight-current-row style="width: 100%">
@@ -156,6 +37,7 @@
         <el-button type="primary" @click="dialogPvVisible = false">{{ $t('table.confirm') }}</el-button>
       </span>
     </el-dialog>
+
   </div>
 </template>
 
@@ -165,19 +47,20 @@ import {
   fetchPv,
   createArticle,
   updateArticle
-} from "@/api/article";
-import waves from "@/directive/waves"; // waves directive
-import { parseTime } from "@/utils";
+} from '@/api/article';
+import waves from '@/directive/waves'; // waves directive
+import { parseTime } from '@/utils';
 // import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 
-import tableComponent from "@/components/tableComponent"; //表单组件
-import filterPanel from "@/components/filterPanel"
+import tableComponent from '@/components/TableComponent'; // 表单组件
+import filterPanel from '@/components/FilterPanel';  //查询
+import formPanel from '@/components/Form'; //表单
 
 const calendarTypeOptions = [
-  { key: "CN", display_name: "China" },
-  { key: "US", display_name: "USA" },
-  { key: "JP", display_name: "Japan" },
-  { key: "EU", display_name: "Eurozone" }
+  { key: 'CN', display_name: 'China' },
+  { key: 'US', display_name: 'USA' },
+  { key: 'JP', display_name: 'Japan' },
+  { key: 'EU', display_name: 'Eurozone' }
 ];
 
 // arr to obj, such as { CN : "China", US : "USA" }
@@ -187,15 +70,15 @@ const calendarTypeKeyValue = calendarTypeOptions.reduce((acc, cur) => {
 }, {});
 
 export default {
-  name: "ComplexTable",
-  components: { tableComponent ,filterPanel},
+  name: 'ComplexTable',
+  components: { tableComponent, filterPanel , formPanel },
   directives: { waves },
   filters: {
     statusFilter(status) {
       const statusMap = {
-        published: "success",
-        draft: "info",
-        deleted: "danger"
+        published: 'success',
+        draft: 'info',
+        deleted: 'danger'
       };
       return statusMap[status];
     },
@@ -205,15 +88,97 @@ export default {
   },
   data() {
     return {
-      filterOption:{
-        inline:true
+      formConfig:{
+        inline:false,
+        col:24,
+        labelPosition:'left',
+        ref:'dataForm',
+        labelWidth:'70px',
+        style:'width: 400px; margin-left:50px',
+        formItemList:[{
+          type:'select',
+          class:'filter-item',
+          prop:'type',
+          label:this.$t('table.type'),
+          placeholder:'please select',
+          optionLabel:'display_name',
+          optionValue:'key',
+          optionKey:'key',
+          options: calendarTypeOptions
+        },{
+          type:'dateTimePicker',
+          prop:'timestamp',
+          label:this.$t('table.date'),
+          subType:'datetime',
+          placeholder:'Please pick a date'
+        },{
+          type:'input',
+          prop:'title',
+          label:this.$t('table.title')
+        },{
+          type:'select',
+          prop:'status',
+          label:this.$t('table.status'),
+          class:'filter-item',
+          placeholder:'please select',
+          optionSingle:true,
+          options:['published', 'draft', 'deleted']
+        },{
+          type:'textarea',
+          prop:'remark',
+          label:this.$t('table.remark'),
+          autosize:{ minRows: 2, maxRows: 4},
+          placeholder:'Please input'
+        }]
       },
-      filterForm:[{
-        type:'input',
-        value:'2',
-        clearable:true
-      }],
-
+      filterConfig:{
+        inline: false,
+        gutter: 5, // 栅格的间隔
+        col: 6, // 栅格的格数
+        filterList: [{  //表单项
+          type: 'input',
+          prop: 'title',
+          clearable: true,
+          placeholder: this.$t('table.title'),
+          col: 4
+        }, {
+          type: 'select',
+          prop: 'type',
+          col: 4,
+          optionLabel:'display_name',
+          optionValue:'key',
+          optionKey:'key',
+          options: calendarTypeOptions,
+          changeSelect: (optionVal, item, index) => {
+            console.log(optionVal, item, index)
+          }
+        }],
+        operates: [{
+          type: 'primary',
+          buttonLabel: this.$t('table.search'),
+          btnType: 'primary',
+          icon: 'el-icon-search',
+          method: (item, index) => {
+           this.handleFilter()
+          }
+        },{
+          type: 'primary',
+          buttonLabel: this.$t('table.add'),
+          btnType: 'primary',
+          icon: 'el-icon-edit',
+          method: (item, index) => {
+           this.handleCreate()
+          }
+        },{
+          type: 'primary',
+          buttonLabel: this.$t('table.export'),
+          btnType: 'primary',
+          icon: 'el-icon-download',
+          method: (item, index) => {
+           this.handleDownload()
+          }
+        }]
+      },
       tableData: [],
       options: {
         border: true,
@@ -226,77 +191,77 @@ export default {
 
       columns: [
         {
-          prop: "id",
-          label: "编号",
-          align: "center",
-          width: "80"
+          prop: 'id',
+          label: '编号',
+          align: 'center',
+          width: '80'
         },
         {
-          prop: "timestamp",
-          label: "时间",
-          align: "center",
-          width: "150",
+          prop: 'timestamp',
+          label: '时间',
+          align: 'center',
+          width: '150',
           formatter: (row, column, cellValue) => {
             return `<span style="white-space: nowrap;color: dodgerblue;">${parseTime(
               row.timestamp,
-              "{y}-{m}-{d} {h}:{i}"
+              '{y}-{m}-{d} {h}:{i}'
             )}</span>`;
           }
         },
         {
-          prop: "title",
-          label: "标题"
+          prop: 'title',
+          label: '标题'
         },
         {
-          prop: "author",
-          label: "作者",
-          width: "110"
+          prop: 'author',
+          label: '作者',
+          width: '110'
         },
         {
-          prop: "reviewer",
-          label: "审核人",
-          width: "110"
+          prop: 'reviewer',
+          label: '审核人',
+          width: '110'
         },
         {
-          prop: "importance",
-          label: "重要性",
-          width: "80",
+          prop: 'importance',
+          label: '重要性',
+          width: '80',
           render: (h, params) => {
-            let arr = Array.from(Array(params.row.importance), (v, k) => k); //循环多个
+            const arr = Array.from(Array(params.row.importance), (v, k) => k); // 循环多个
             return h(
-              "span",
+              'span',
               arr.map((item, index) => {
-                return h("svg-icon", {
+                return h('svg-icon', {
                   props: {
-                    iconClass: "star"
+                    iconClass: 'star'
                   }, // 组件的props
-                  class: "meta-item__icon"
+                  class: 'meta-item__icon'
                 });
               })
             );
           }
         },
         {
-          prop: "pageviews",
-          label: "阅读数",
-          width: "95"
+          prop: 'pageviews',
+          label: '阅读数',
+          width: '95'
         },
         {
-          prop: "status",
-          label: "状态",
-          align: "center",
-          width: "100",
+          prop: 'status',
+          label: '状态',
+          align: 'center',
+          width: '100',
           render: (h, params) => {
             return h(
-              "el-tag",
+              'el-tag',
               {
                 props: {
                   type:
-                    params.row.status === "published"
-                      ? "success"
-                      : params.row.status === "draft"
-                      ? "info"
-                      : "danger"
+                    params.row.status === 'published'
+                      ? 'success'
+                      : params.row.status === 'draft'
+                        ? 'info'
+                        : 'danger'
                 } // 组件的props
               },
               params.row.status
@@ -307,45 +272,53 @@ export default {
       operates: {
         list: [
           {
-            id: "1",
-            label: "编辑",
-            type: "warning",
+            id: '1',
+            label: '编辑',
+            type: 'warning',
             show: true,
-            icon: "el-icon-edit",
+            icon: 'el-icon-edit',
             plain: true,
-            disabled: () => {
-              return false;
-            },
+            disabled: false,
             method: (index, row) => {
-              this.handleEdit(index, row);
+              this.handleUpdate(row);
             }
           },
           {
-            id: "2",
-            label: "发布",
-            type: "primary",
-            icon: "el-icon-delete",
-            show: true,
-            plain: false,
-            disabled: (index, row) => {
-              return row.status == "published" ? true : false;
+            id: '2',
+            label: '下架',
+            type: 'success',
+            icon: 'el-icon-delete',
+            show: (index,row)=>{
+              return row.status != 'published' ? true : false
             },
+            plain: false,
             method: (index, row) => {
-              this.handlePush(index, row);
+              this.handleModifyStatus(row,'published');
             }
           },
           {
-            id: "3",
-            label: "删除",
-            type: "danger",
-            icon: "el-icon-delete",
+            id: '3',
+            label: '发布',
+            type: 'primary',
+            icon: 'el-icon-delete',
+            show: (index,row)=>{
+              return row.status != 'draft' ? true : false
+            },
+            plain: false,
+            method: (index, row) => {
+              this.handleModifyStatus(row,'draft');
+            }
+          },
+          {
+            id: '3',
+            label: '删除',
+            type: 'danger',
+            icon: 'el-icon-delete',
             show: true,
             plain: false,
-            disabled: () => {
-              return false;
-            },
+            disabled: false,
             method: (index, row) => {
-              this.handleDel(index, row);
+              this.handleDelete(row);
             }
           }
         ],
@@ -364,47 +337,47 @@ export default {
         importance: undefined,
         title: undefined,
         type: undefined,
-        sort: "+id"
+        sort: '+id'
       },
       importanceOptions: [1, 2, 3],
       calendarTypeOptions,
       sortOptions: [
-        { label: "ID Ascending", key: "+id" },
-        { label: "ID Descending", key: "-id" }
+        { label: 'ID Ascending', key: '+id' },
+        { label: 'ID Descending', key: '-id' }
       ],
-      statusOptions: ["published", "draft", "deleted"],
+      statusOptions: ['published', 'draft', 'deleted'],
       showReviewer: false,
       temp: {
         id: undefined,
         importance: 1,
-        remark: "",
+        remark: '',
         timestamp: new Date(),
-        title: "",
-        type: "",
-        status: "published"
+        title: '',
+        type: '',
+        status: 'published'
       },
       dialogFormVisible: false,
-      dialogStatus: "",
+      dialogStatus: '',
       textMap: {
-        update: "Edit",
-        create: "Create"
+        update: 'Edit',
+        create: 'Create'
       },
       dialogPvVisible: false,
       pvData: [],
       rules: {
         type: [
-          { required: true, message: "type is required", trigger: "change" }
+          { required: true, message: 'type is required', trigger: 'change' }
         ],
         timestamp: [
           {
-            type: "date",
+            type: 'date',
             required: true,
-            message: "timestamp is required",
-            trigger: "change"
+            message: 'timestamp is required',
+            trigger: 'change'
           }
         ],
         title: [
-          { required: true, message: "title is required", trigger: "blur" }
+          { required: true, message: 'title is required', trigger: 'blur' }
         ]
       },
       downloadLoading: false
@@ -412,37 +385,35 @@ export default {
   },
   created() {
     this.getList();
-    this.getTableData();
   },
   methods: {
+
     handleSelectionChange(val) {
-      console.log("val:", val);
+      console.log('val:', val);
     },
     // 编辑
     handleEdit(index, row) {
-      console.log(" index:", index);
-      console.log(" row:", row);
+      console.log(' index:', index);
+      console.log(' row:', row);
     },
-    //发布
+    // 发布
     handlePush(index, row) {
-      console.log(" index:", index);
-      console.log(" row:", row);
+      console.log(' index:', index);
+      console.log(' row:', row);
     },
     // 删除
     handleDel(index, row) {
-      console.log(" index:", index);
-      console.log(" row:", row);
+      console.log(' index:', index);
+      console.log(' row:', row);
     },
 
     handleRowClick(val) {},
-    handleIndexChange() {},
-    changePagination() {},
-    getTableData(current) {
-      let params = {
-        current: this.listQuery.page,
-        size: this.listQuery.total
-      };
+    handleIndexChange(page) {
+      this.listQuery.page = page;
+      this.getList();
     },
+    changePagination() {},
+  
 
     getList() {
       this.listLoading = true;
@@ -462,22 +433,22 @@ export default {
     },
     handleModifyStatus(row, status) {
       this.$message({
-        message: "操作成功",
-        type: "success"
+        message: '操作成功',
+        type: 'success'
       });
       row.status = status;
     },
     sortChange(data) {
       const { prop, order } = data;
-      if (prop === "id") {
+      if (prop === 'id') {
         this.sortByID(order);
       }
     },
     sortByID(order) {
-      if (order === "ascending") {
-        this.listQuery.sort = "+id";
+      if (order === 'ascending') {
+        this.listQuery.sort = '+id';
       } else {
-        this.listQuery.sort = "-id";
+        this.listQuery.sort = '-id';
       }
       this.handleFilter();
     },
@@ -485,33 +456,33 @@ export default {
       this.temp = {
         id: undefined,
         importance: 1,
-        remark: "",
+        remark: '',
         timestamp: new Date(),
-        title: "",
-        status: "published",
-        type: ""
+        title: '',
+        status: 'published',
+        type: ''
       };
     },
     handleCreate() {
       this.resetTemp();
-      this.dialogStatus = "create";
+      this.dialogStatus = 'create';
       this.dialogFormVisible = true;
       this.$nextTick(() => {
-        this.$refs["dataForm"].clearValidate();
+        this.$refs['formPanel'].$refs['dataForm'].clearValidate();
       });
     },
     createData() {
-      this.$refs["dataForm"].validate(valid => {
+      this.$refs['formPanel'].$refs['dataForm'].validate(valid => {
         if (valid) {
           this.temp.id = parseInt(Math.random() * 100) + 1024; // mock a id
-          this.temp.author = "vue-element-admin";
+          this.temp.author = 'vue-element-admin';
           createArticle(this.temp).then(() => {
             this.list.unshift(this.temp);
             this.dialogFormVisible = false;
             this.$notify({
-              title: "成功",
-              message: "创建成功",
-              type: "success",
+              title: '成功',
+              message: '创建成功',
+              type: 'success',
               duration: 2000
             });
           });
@@ -521,14 +492,14 @@ export default {
     handleUpdate(row) {
       this.temp = Object.assign({}, row); // copy obj
       this.temp.timestamp = new Date(this.temp.timestamp);
-      this.dialogStatus = "update";
+      this.dialogStatus = 'update';
       this.dialogFormVisible = true;
       this.$nextTick(() => {
-        this.$refs["dataForm"].clearValidate();
+        this.$refs['formPanel'].$refs['dataForm'].clearValidate();
       });
     },
     updateData() {
-      this.$refs["dataForm"].validate(valid => {
+      this.$refs['formPanel'].$refs['dataForm'].validate(valid => {
         if (valid) {
           const tempData = Object.assign({}, this.temp);
           tempData.timestamp = +new Date(tempData.timestamp); // change Thu Nov 30 2017 16:41:05 GMT+0800 (CST) to 1512031311464
@@ -537,9 +508,9 @@ export default {
             this.list.splice(index, 1, this.temp);
             this.dialogFormVisible = false;
             this.$notify({
-              title: "成功",
-              message: "更新成功",
-              type: "success",
+              title: '成功',
+              message: '更新成功',
+              type: 'success',
               duration: 2000
             });
           });
@@ -548,9 +519,9 @@ export default {
     },
     handleDelete(row, index) {
       this.$notify({
-        title: "成功",
-        message: "删除成功",
-        type: "success",
+        title: '成功',
+        message: '删除成功',
+        type: 'success',
         duration: 2000
       });
       this.list.splice(index, 1);
@@ -563,20 +534,20 @@ export default {
     },
     handleDownload() {
       this.downloadLoading = true;
-      import("@/vendor/Export2Excel").then(excel => {
-        const tHeader = ["timestamp", "title", "type", "importance", "status"];
+      import('@/vendor/Export2Excel').then(excel => {
+        const tHeader = ['timestamp', 'title', 'type', 'importance', 'status'];
         const filterVal = [
-          "timestamp",
-          "title",
-          "type",
-          "importance",
-          "status"
+          'timestamp',
+          'title',
+          'type',
+          'importance',
+          'status'
         ];
         const data = this.formatJson(filterVal);
         excel.export_json_to_excel({
           header: tHeader,
           data,
-          filename: "table-list"
+          filename: 'table-list'
         });
         this.downloadLoading = false;
       });
@@ -584,7 +555,7 @@ export default {
     formatJson(filterVal) {
       return this.list.map(v =>
         filterVal.map(j => {
-          if (j === "timestamp") {
+          if (j === 'timestamp') {
             return parseTime(v[j]);
           } else {
             return v[j];
@@ -599,3 +570,8 @@ export default {
   }
 };
 </script>
+<style lang="scss" scope>
+.limitHeight .el-textarea__inner{
+  height: 36px;
+}
+</style>
