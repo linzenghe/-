@@ -180,18 +180,18 @@ export default {
   },
   computed: {},
   mounted() {
-    this.setDefaultValue();
+    this.setDefaultValue()
   },
   methods: {
     setDefaultValue (){
-      const formData = {...this.value};
+      const formData = {...this.value}
       // 设置默认值
       this.formConfig.formItemList.forEach(({ key, value }) => {
         if (formData[key] === undefined || formData[key] === null) {
-          formData[key] = value;
+          formData[key] = value
         }
       });
-      this.$emit("input", formData);
+      this.$emit('input', formData)
     }
   }
 };

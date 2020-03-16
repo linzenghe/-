@@ -85,15 +85,18 @@
 <script>
   export default {
     props: {
+      // 数据列表
       data: {
         type: Array,
         default: []
-      }, // 数据列表
+      },
+      // 需要展示的列 === prop：列数据对应的属性，label：列名，align：对齐方式，width：列宽
       columns: {
         type: Array,
         default: []
-      }, // 需要展示的列 === prop：列数据对应的属性，label：列名，align：对齐方式，width：列宽
-      operates: {}, // 操作按钮组 === label: 文本，type :类型（primary / success / warning / danger / info / text），show：是否显示，icon：按钮图标，plain：是否朴素按钮，disabled：是否禁用，method：回调方法
+      },
+      // 操作按钮组 === label: 文本，type :类型（primary / success / warning / danger / info / text），show：是否显示，icon：按钮图标，plain：是否朴素按钮，disabled：是否禁用，method：回调方法
+      operates: {},
       options: {
         type: Object,
         default: {
@@ -104,7 +107,6 @@
         pagination: true
       }, // table 表格的控制参数
       pagination: Object,  //分页
-
     },
     //组件
     components: {
@@ -146,18 +148,18 @@
     methods: {
       // 多行选中
       handleSelectionChange(val) {
-        this.multipleSelection = val;
-        this.$emit("handleSelectionChange", val);
+        this.multipleSelection = val
+        this.$emit('handleSelectionChange', val)
       },
       handleRowClick(val) {
-        this.$emit("handleRowClick", val);
+        this.$emit('handleRowClick', val)
       },
       handleSizeChange(size){
-        this.$$emit('handleSizeChange',size);
+        this.$emit('handleSizeChange',size)
       },
       /*切换页码*/
       handleIndexChange(current){
-        this.$emit('handleIndexChange',current);
+        this.$emit('handleIndexChange',current)
       }
     }
   };

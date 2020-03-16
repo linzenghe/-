@@ -3,6 +3,7 @@
     <el-form :inline="filterConfig.inline">
       <el-row :gutter="filterConfig.gutter">
         <slot name="formItem"></slot>
+
         <el-col
           v-for="(item, index) in filterConfig.filterList"
           :key="item.prop"
@@ -25,17 +26,8 @@
               :clearable="item.clearable ? item.clearable : false"
             />
             <!-- radio -->
-            <el-radio-group
-              v-if="item.type === 'radio'"
-              v-model="value[item.prop]"
-              @change="radioVal => {item.changeRadio? item.changeRadio(radioVal, item, index): ''}"
-            >
-              <el-radio
-                v-for="(radio, index) in item.radioArr"
-                :key="index"
-                :label="radio[item.radioLabel?item.radioLabel:'label']"
-                :disabled="radio.disabled"
-                >{{ radio[item.radioLabel?item.radioLabel:'label'] }}</el-radio>
+            <el-radio-group v-if="item.type === 'radio'" v-model="value[item.prop]" @change="radioVal => {item.changeRadio? item.changeRadio(radioVal, item, index): ''}">
+              <el-radio v-for="(radio, index) in item.radioArr" :key="index" :label="radio[item.radioLabel?item.radioLabel:'label']":disabled="radio.disabled">{{ radio[item.radioLabel?item.radioLabel:'label'] }}</el-radio>
             </el-radio-group>
             <!-- checkbox -->
             <el-checkbox-group
@@ -43,13 +35,7 @@
               v-model="value[item.prop]"
               @change="checkVal => { item.changeCheck? item.changeCheck(checkVal, item, index): ''}"
             >
-              <el-checkbox
-                v-for="(checkbox, index) in item.checkboxArr"
-                :key="index"
-                :label="checkbox[item.checkLabel?item.checkLabel:'label']"
-                :disabled="checkbox.disabled"
-                >{{ checkbox[item.checkLabel?item.checkLabel:'label'] }}</el-checkbox
-              >
+              <el-checkbox v-for="(checkbox,index) in item.checkboxArr" :key="index" :label="checkbox[item.checkLabel?item.checkLabel:'label']" :disabled="checkbox.disabled" >{{ checkbox[item.checkLabel?item.checkLabel:'label'] }}</el-checkbox>
             </el-checkbox-group>
             <!-- select -->
             <el-select
@@ -147,20 +133,10 @@
         </el-col>
         <el-col :span="filterConfig.operateCol ? filterConfig.operateCol : filterConfig.col">
           <el-form-item>
-            <el-button
-              v-for="(item,index) in filterConfig.operates" :key="index"
-              :type="item.type"
-              :size="item.size"
-              :disabled="item.disabled"
-              :plain="item.plain"
-              :icon="item.icon"
-              @click.native.prevent="item.method ? item.method(item, index) : ''"
-              >{{ item.buttonLabel }}
-            </el-button>
+            <el-button v-for="(item,index) in filterConfig.operates" :key="index" :type="item.type" :size="item.size" :disabled="item.disabled" :plain="item.plain" :icon="item.icon" @click.native.prevent="item.method ? item.method(item, index) : ''">{{ item.buttonLabel }}</el-button>
             <slot name="operate"></slot>
           </el-form-item>
         </el-col>
-        
       </el-row>
     </el-form>
   </div>
@@ -179,22 +155,19 @@ export default {
   },
   computed: {},
   mounted() {
-    this.setDefaultValue();
+    this.setDefaultValue()
   },
   methods: {
-    setDefaultValue (){
-      const formData = {...this.value};
+    setDefaultValue() {
+      const formData = { ...this.value }
       // 设置默认值
       this.filterConfig.filterList.forEach(({ key, value }) => {
         if (formData[key] === undefined || formData[key] === null) {
-          formData[key] = value;
+          formData[key] = value
         }
-      });
-      this.$emit("input", formData);
+      })
+      this.$emit('input', formData)
     }
   }
 };
 </script>
-<style lang="scss" scope>
-
-</style>
