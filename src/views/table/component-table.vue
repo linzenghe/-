@@ -2,10 +2,10 @@
   <div class="app-container">
 
     <!-- 查询组件 -->
-    <filter-panel :filterConfig="filterConfig" :value="listQuery" />
+    <filter-panel :filter-config="filterConfig" :value="listQuery" />
 
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
-      <form-panel ref="formPanel" :formConfig="formConfig" :value="temp" :rules="rules" />
+      <form-panel ref="formPanel" :form-config="formConfig" :value="temp" :rules="rules" />
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">{{ $t('table.cancel') }}</el-button>
         <el-button
@@ -156,6 +156,7 @@ export default {
           btnType: 'primary',
           icon: 'el-icon-search',
           method: (item, index) => {
+            console.log(item, index)
             this.handleFilter()
           }
         }, {
@@ -164,6 +165,7 @@ export default {
           btnType: 'primary',
           icon: 'el-icon-edit',
           method: (item, index) => {
+            console.log(item, index)
             this.handleCreate()
           }
         }, {
@@ -172,6 +174,7 @@ export default {
           btnType: 'primary',
           icon: 'el-icon-download',
           method: (item, index) => {
+            console.log(item, index)
             this.handleDownload()
           }
         }]
@@ -199,6 +202,7 @@ export default {
           align: 'center',
           width: '150',
           formatter: (row, column, cellValue) => {
+            console.log(column, cellValue)
             return `<span style="white-space: nowrap;color: dodgerblue;">${parseTime(
               row.timestamp,
               '{y}-{m}-{d} {h}:{i}'
@@ -228,6 +232,7 @@ export default {
             return h(
               'span',
               arr.map((item, index) => {
+                console.log(item, index)
                 return h('svg-icon', {
                   props: {
                     iconClass: 'star'

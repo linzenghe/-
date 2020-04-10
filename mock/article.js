@@ -48,7 +48,8 @@ export default [
       const pageList = mockList.filter((item, index) => index < limit * page && index >= limit * (page - 1))
 
       return {
-        code: 20000,
+        msg: '请求成功',
+        success: true,
         data: {
           total: mockList.length,
           items: pageList
@@ -65,7 +66,8 @@ export default [
       for (const article of List) {
         if (article.id === +id) {
           return {
-            code: 20000,
+            msg: '请求成功',
+            success: true,
             data: article
           }
         }
@@ -78,7 +80,8 @@ export default [
     type: 'get',
     response: _ => {
       return {
-        code: 20000,
+        msg: '请求成功',
+        success: true,
         data: {
           pvData: [
             { key: 'PC', pv: 1024 },
@@ -96,7 +99,8 @@ export default [
     type: 'post',
     response: _ => {
       return {
-        code: 20000,
+        msg: '创建成功',
+        success: true,
         data: 'success'
       }
     }
@@ -107,7 +111,8 @@ export default [
     type: 'post',
     response: _ => {
       return {
-        code: 20000,
+        msg: '更新成功',
+        success: true,
         data: 'success'
       }
     }

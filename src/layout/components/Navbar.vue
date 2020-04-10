@@ -1,37 +1,30 @@
 <template>
-  <div class="navbar">
-    <hamburger id="hamburger-container" :is-active="sidebar.opened" class="hamburger-container" @toggleClick="toggleSideBar" />
-
-    <breadcrumb id="breadcrumb-container" class="breadcrumb-container" />
-
+  <div class="navbar" :style="{backgroundImage: 'url('+topBg+')'}">
+    <div class="logo">
+      <img src="@/assets/img/logo.png">
+      <div class="company-title">
+        <h3>招商局能源运输股份有限公司</h3>
+        <p>china Merchants Energy Shipping co.LTD</p>
+      </div>
+    </div>
+    <div class="title">{{ title }}</div>
     <div class="right-menu">
       <template v-if="device!=='mobile'">
-        <search id="header-search" class="right-menu-item" />
-
-        <error-log class="errLog-container right-menu-item hover-effect" />
 
         <screenfull id="screenfull" class="right-menu-item hover-effect" />
-
-        <el-tooltip :content="$t('navbar.size')" effect="dark" placement="bottom">
-          <size-select id="size-select" class="right-menu-item hover-effect" />
-        </el-tooltip>
 
         <lang-select class="right-menu-item hover-effect" />
 
       </template>
 
       <el-dropdown class="avatar-container right-menu-item hover-effect" trigger="click">
-        <div class="avatar-wrapper">
-          <img :src="avatar+'?imageView2/1/w/80/h/80'" class="user-avatar">
+        <div class="avatar-wrapper" style="margin-top: 0">
+          <!-- <img :src="avatar+'?imageView2/1/w/80/h/80'" class="user-avatar"> -->
+          <span style="font-size:15px">管理员</span>
           <i class="el-icon-caret-bottom" />
         </div>
         <el-dropdown-menu slot="dropdown">
-          <router-link to="/profile/index">
-            <el-dropdown-item>
-              {{ $t('navbar.profile') }}
-            </el-dropdown-item>
-          </router-link>
-          <router-link to="/">
+          <router-link to="/index">
             <el-dropdown-item>
               {{ $t('navbar.dashboard') }}
             </el-dropdown-item>
@@ -47,29 +40,27 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import Breadcrumb from '@/components/Breadcrumb'
-import Hamburger from '@/components/Hamburger'
-import ErrorLog from '@/components/ErrorLog'
 import Screenfull from '@/components/Screenfull'
-import SizeSelect from '@/components/SizeSelect'
 import LangSelect from '@/components/LangSelect'
-import Search from '@/components/HeaderSearch'
-
+// import Search from '@/components/HeaderSearch'
+import topBg from '@/assets/img/top_bg.png'
 export default {
   components: {
-    Breadcrumb,
-    Hamburger,
-    ErrorLog,
     Screenfull,
-    SizeSelect,
-    LangSelect,
-    Search
+    LangSelect
+  },
+  data() {
+    return {
+      title: '招商轮船船舶管理信息平台',
+      topBg: topBg
+    }
   },
   computed: {
     ...mapGetters([
       'sidebar',
       'avatar',
-      'device'
+      'device',
+      'userInfo'
     ])
   },
   methods: {
@@ -85,13 +76,49 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import "~@/styles/variables.scss";
 .navbar {
-  height: 50px;
+  height: $navbarHeight;
   overflow: hidden;
   position: relative;
-  background: #fff;
+  background-size: 100% 100%;
+  background-position: center;
   box-shadow: 0 1px 4px rgba(0,21,41,.08);
-
+  .logo {
+    float: left;
+    overflow: hidden;
+    height: $navbarHeight;
+    color: #fff;
+    padding: 8px 0 8px 24px;
+    img {
+      width: 45px;
+      height: 45px;
+      float: left;
+    }
+    .company-title {
+      float: left;
+      margin-left: 16px;
+      h3 {
+        font-size: 20px;
+        margin: 0;
+        font-weight: normal;
+        margin-top: 4px;
+      }
+      p {
+        font-size: 13px;
+        margin: 0;
+        letter-spacing: 0.5px;
+      }
+    }
+  }
+  .title {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    color: #fff;
+    font-size: 24px;
+  }
   .hamburger-container {
     line-height: 46px;
     height: 100%;
@@ -117,7 +144,7 @@ export default {
   .right-menu {
     float: right;
     height: 100%;
-    line-height: 50px;
+    line-height: $navbarHeight;
 
     &:focus {
       outline: none;
@@ -128,7 +155,7 @@ export default {
       padding: 0 8px;
       height: 100%;
       font-size: 18px;
-      color: #5a5e66;
+      color: #fff;
       vertical-align: text-bottom;
 
       &.hover-effect {
@@ -145,7 +172,7 @@ export default {
       margin-right: 30px;
 
       .avatar-wrapper {
-        margin-top: 5px;
+        margin-top: 10px;
         position: relative;
 
         .user-avatar {

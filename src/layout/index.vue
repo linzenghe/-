@@ -4,11 +4,12 @@
     <sidebar class="sidebar-container" />
     <div :class="{hasTagsView:needTagsView}" class="main-container">
       <div :class="{'fixed-header':fixedHeader}">
-        <navbar />
-        <tags-view v-if="needTagsView" />
+        <navbar />  <!-- 导航条 -->
+        <top-menu :menu-list="menuList" />  <!-- 顶部菜单 -->
+        <tags-view v-if="needTagsView" />  <!-- 标签 -->
       </div>
-      <app-main />
-      <right-panel v-if="showSettings">
+      <app-main />   <!-- 页面主题 -->
+      <right-panel v-if="showSettings">  <!-- 设置 -->
         <settings />
       </right-panel>
     </div>
@@ -18,6 +19,7 @@
 <script>
 import RightPanel from '@/components/RightPanel'
 import { AppMain, Navbar, Settings, Sidebar, TagsView } from './components'
+import TopMenu from './components/TopMenu'
 import ResizeMixin from './mixin/ResizeHandler'
 import { mapState } from 'vuex'
 
@@ -29,7 +31,8 @@ export default {
     RightPanel,
     Settings,
     Sidebar,
-    TagsView
+    TagsView,
+    TopMenu
   },
   mixins: [ResizeMixin],
   computed: {
@@ -47,6 +50,9 @@ export default {
         withoutAnimation: this.sidebar.withoutAnimation,
         mobile: this.device === 'mobile'
       }
+    },
+    menuList() {
+      return []
     }
   },
   methods: {
@@ -58,7 +64,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  @import "~@/styles/mixin.scss";
+ @import "~@/styles/mixin.scss";
   @import "~@/styles/variables.scss";
 
   .app-wrapper {
@@ -87,16 +93,20 @@ export default {
     position: fixed;
     top: 0;
     right: 0;
-    z-index: 9;
-    width: calc(100% - #{$sideBarWidth});
+    z-index: 1002;
+    width: 100%;
     transition: width 0.28s;
   }
 
   .hideSidebar .fixed-header {
-    width: calc(100% - 54px)
+    width: 100%
   }
 
   .mobile .fixed-header {
     width: 100%;
+  }
+
+  .fixed-header + .app-main {
+    min-height: calc(100vh);
   }
 </style>

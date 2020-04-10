@@ -27,6 +27,7 @@ export default {
   /* 50= navbar  50  */
   min-height: calc(100vh - 50px);
   width: 100%;
+  padding-left: 10px;
   position: relative;
   overflow: hidden;
 }
@@ -42,7 +43,7 @@ export default {
   }
 
   .fixed-header+.app-main {
-    padding-top: 84px;
+    padding-top: 134px;
   }
 }
 </style>

@@ -15,6 +15,7 @@
         <sidebar-item v-for="route in permission_routes" :key="route.path" :item="route" :base-path="route.path" />
       </el-menu>
     </el-scrollbar>
+    <hamburger-line :is-active="sidebar.opened" @toggleClick="toggleSideBar" />
   </div>
 </template>
 
@@ -23,9 +24,10 @@ import { mapGetters } from 'vuex'
 import Logo from './Logo'
 import SidebarItem from './SidebarItem'
 import variables from '@/styles/variables.scss'
+import HamburgerLine from '@/components/HamburgerLine'
 
 export default {
-  components: { SidebarItem, Logo },
+  components: { SidebarItem, Logo, HamburgerLine },
   computed: {
     ...mapGetters([
       'permission_routes',
@@ -48,6 +50,11 @@ export default {
     },
     isCollapse() {
       return !this.sidebar.opened
+    }
+  },
+  methods: {
+    toggleSideBar() {
+      this.$store.dispatch('app/toggleSideBar')
     }
   }
 }

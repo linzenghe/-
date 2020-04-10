@@ -35,13 +35,15 @@ export default [
       // mock error
       if (!token) {
         return {
-          code: 60204,
-          message: 'Account and password are incorrect.'
+          errorCode: 500,
+          success: false,
+          errorMessages: '账号密码错误.'
         }
       }
 
       return {
-        code: 20000,
+        msg: '请求成功',
+        success: true,
         data: token
       }
     }
@@ -58,13 +60,15 @@ export default [
       // mock error
       if (!info) {
         return {
-          code: 50008,
-          message: 'Login failed, unable to get user details.'
+          errorCode: 500,
+          success: false,
+          message: '登录失败，无法获取用户详细信息。'
         }
       }
 
       return {
-        code: 20000,
+        msg: '请求成功',
+        success: true,
         data: info
       }
     }
@@ -76,9 +80,13 @@ export default [
     type: 'post',
     response: _ => {
       return {
-        code: 20000,
+        msg: '请求成功',
+        success: true,
         data: 'success'
       }
     }
+  },
+  {
+    url: '/vue-element-admin/user/'
   }
 ]

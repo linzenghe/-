@@ -1,5 +1,5 @@
 <template>
-  <div id="tags-view-container" class="tags-view-container">
+  <div id="tags-view-container" class="tags-view-container" :style="{width: !isCollapse? 'calc(100% - ' + variables.sideBarWidth + ')': 'calc(100% - 54px)', marginLeft: !isCollapse? variables.sideBarWidth: '54px'}">
     <scroll-pane ref="scrollPane" class="tags-view-wrapper">
       <router-link
         v-for="tag in visitedViews"
@@ -26,9 +26,11 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 import ScrollPane from './ScrollPane'
 import { generateTitle } from '@/utils/i18n'
 import path from 'path'
+import variables from '@/styles/variables.scss'
 
 export default {
   components: { ScrollPane },
@@ -42,11 +44,20 @@ export default {
     }
   },
   computed: {
+    ...mapGetters([
+      'sidebar'
+    ]),
     visitedViews() {
       return this.$store.state.tagsView.visitedViews
     },
     routes() {
       return this.$store.state.permission.routes
+    },
+    isCollapse() {
+      return !this.sidebar.opened
+    },
+    variables() {
+      return variables
     }
   },
   watch: {
@@ -137,6 +148,7 @@ export default {
       })
     },
     closeSelectedTag(view) {
+      console.log(view)
       this.$store.dispatch('tagsView/delView', view).then(({ visitedViews }) => {
         if (this.isActive(view)) {
           this.toLastView(visitedViews, view)
@@ -177,7 +189,7 @@ export default {
       const offsetLeft = this.$el.getBoundingClientRect().left // container margin left
       const offsetWidth = this.$el.offsetWidth // container width
       const maxLeft = offsetWidth - menuMinWidth // left boundary
-      const left = e.clientX - offsetLeft + 15 // 15: margin right
+      const left = e.clientX - offsetLeft + 15 + (!this.isCollapse ? parseInt(this.variables.sideBarWidth) : 54)// 15: margin right
 
       if (left > maxLeft) {
         this.left = maxLeft
@@ -200,42 +212,66 @@ export default {
 .tags-view-container {
   height: 34px;
   width: 100%;
-  background: #fff;
-  border-bottom: 1px solid #d8dce5;
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, .12), 0 0 3px 0 rgba(0, 0, 0, .04);
+  background: #264a98;
+  // box-shadow: 0 1px 3px 0 rgba(0, 0, 0, .12), 0 0 3px 0 rgba(0, 0, 0, .04);
+  transition: all 0.28s;
+  /deep/.el-scrollbar__wrap {
+    height: 52px;
+  }
+  .el-scrollbar__view {
+    height: 100%;
+  }
   .tags-view-wrapper {
     .tags-view-item {
       display: inline-block;
       position: relative;
       cursor: pointer;
-      height: 26px;
-      line-height: 26px;
-      border: 1px solid #d8dce5;
-      color: #495060;
-      background: #fff;
-      padding: 0 8px;
-      font-size: 12px;
-      margin-left: 5px;
+      height: 30px;
+      line-height: 30px;
+      color: #fff;
+      background: #3477f6;
+      padding: 0 16px;
+      font-size: 14px;
+      margin-left: 3px;
       margin-top: 4px;
+      border-top-right-radius: 4px;
+      border-top-left-radius: 4px;
       &:first-of-type {
-        margin-left: 15px;
+        margin-left: 10px;
       }
       &:last-of-type {
         margin-right: 15px;
       }
       &.active {
-        background-color: #42b983;
-        color: #fff;
-        border-color: #42b983;
-        &::before {
-          content: '';
-          background: #fff;
+        background-color: #fff;
+        color: #666;
+        // &::before {
+        //   content: '';
+        //   background: #fff;
+        //   display: inline-block;
+        //   width: 8px;
+        //   height: 8px;
+        //   border-radius: 50%;
+        //   position: relative;
+        //   margin-right: 2px;
+        // }
+      }
+      .el-icon-close {
+        width: 16px;
+        height: 16px;
+        vertical-align: 2px;
+        border-radius: 50%;
+        text-align: center;
+        transition: all .3s cubic-bezier(.645, .045, .355, 1);
+        transform-origin: 100% 50%;
+        &:before {
+          transform: scale(.6);
           display: inline-block;
-          width: 8px;
-          height: 8px;
-          border-radius: 50%;
-          position: relative;
-          margin-right: 2px;
+          vertical-align: -3px;
+        }
+        &:hover {
+          background-color: #b4bccc;
+          color: #fff;
         }
       }
     }
@@ -258,32 +294,6 @@ export default {
       cursor: pointer;
       &:hover {
         background: #eee;
-      }
-    }
-  }
-}
-</style>
-
-<style lang="scss">
-//reset element css of el-icon-close
-.tags-view-wrapper {
-  .tags-view-item {
-    .el-icon-close {
-      width: 16px;
-      height: 16px;
-      vertical-align: 2px;
-      border-radius: 50%;
-      text-align: center;
-      transition: all .3s cubic-bezier(.645, .045, .355, 1);
-      transform-origin: 100% 50%;
-      &:before {
-        transform: scale(.6);
-        display: inline-block;
-        vertical-align: -3px;
-      }
-      &:hover {
-        background-color: #b4bccc;
-        color: #fff;
       }
     }
   }
