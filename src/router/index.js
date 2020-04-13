@@ -73,7 +73,6 @@ export const constantRoutes = [
       }
     ]
   }
-
 ]
 
 /**
@@ -82,72 +81,6 @@ export const constantRoutes = [
  */
 export const asyncRoutes = [
   /** when your routing map is too long, you can split it into small modules **/
-  {
-    path: '/permission',
-    component: Layout,
-    redirect: '/permission/menu',
-    alwaysShow: true, // will always show the root menu
-    name: 'Permission',
-    meta: {
-      title: '系统设置',
-      icon: 'lock'
-    },
-    children: [
-      {
-        path: 'menu',
-        component: () => import('@/views/permission/menu'),
-        name: 'PagePermission',
-        meta: {
-          title: '菜单配置'
-        }
-      },
-      {
-        path: 'directive',
-        component: () => import('@/views/permission/directive'),
-        name: 'DirectivePermission',
-        meta: {
-          title: '指令权限'
-          // if do not set roles, means: this page does not require permission
-        }
-      },
-      {
-        path: 'role',
-        component: () => import('@/views/permission/role'),
-        name: 'RolePermission',
-        meta: {
-          title: '角色权限'
-        }
-      }
-    ]
-  },
-
-  nestedRouter,
-  tableRouter,
-  {
-    path: '/system',
-    component: Layout,
-    children: [
-      {
-        path: 'log',
-        component: () => import('@/views/error-log/index'),
-        name: 'ErrorLog',
-        meta: { title: 'errorLog', icon: 'bug' }
-      }
-    ]
-  },
-
-  // 404 page must be placed at the end !!!
-  { path: '*', redirect: '/404', hidden: true },
-  {
-    'path': 'external-link',
-    'component': Layout,
-    'children': [
-      {
-        'path': 'https://www.baidu.com',
-        'meta': { 'title': 'externalLink', 'icon': 'link' }
-      }
-    ]
-  }
 ]
 
 const createRouter = () => new Router({

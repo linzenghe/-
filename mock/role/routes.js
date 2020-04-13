@@ -1,56 +1,13 @@
 // Just a mock data
 export const constantRoutes = [
-  {
-    path: '/redirect',
-    component: 'layout/Layout',
-    hidden: true,
-    children: [
-      {
-        path: '/redirect/:path*',
-        component: 'views/redirect/index'
-      }
-    ]
-  },
-  {
-    path: '/login',
-    component: 'views/login/index',
-    hidden: true
-  },
-  {
-    path: '/auth-redirect',
-    component: 'views/login/auth-redirect',
-    hidden: true
-  },
-  {
-    path: '/404',
-    component: 'views/error-page/404',
-    hidden: true
-  },
-  {
-    path: '/401',
-    component: 'views/error-page/401',
-    hidden: true
-  },
-  {
-    path: '',
-    component: 'layout/Layout',
-    redirect: 'dashboard',
-    children: [
-      {
-        path: 'dashboard',
-        component: 'views/dashboard/index',
-        name: 'Dashboard',
-        meta: { title: 'dashboard', icon: 'dashboard', affix: true }
-      }
-    ]
-  }
+
 ]
 
 export const asyncRoutes = [
   {
     path: '/permission',
-    component: 'layout/Layout',
-    redirect: '/permission/index',
+    component: 'layout',
+    redirect: '/permission/menu',
     alwaysShow: true,
     meta: {
       title: 'permission',
@@ -87,7 +44,7 @@ export const asyncRoutes = [
   },
   {
     path: '/nested',
-    component: 'layout/Layout',
+    component: 'layout',
     redirect: '/nested/menu1/menu1-1',
     name: 'Nested',
     meta: {
@@ -147,8 +104,8 @@ export const asyncRoutes = [
   },
   {
     path: '/error-log',
-    component: 'layout/Layout',
-    redirect: 'noRedirect',
+    component: 'layout',
+    redirect: '/error-log/log',
     children: [
       {
         path: 'log',
@@ -157,17 +114,5 @@ export const asyncRoutes = [
         meta: { title: 'errorLog', icon: 'bug' }
       }
     ]
-  },
-  {
-    path: 'external-link',
-    component: 'layout/Layout',
-    children: [
-      {
-        path: 'https://github.com/PanJiaChen/vue-element-admin',
-        meta: { title: 'externalLink', icon: 'link' }
-      }
-    ]
-  },
-
-  { path: '*', redirect: '/404', hidden: true }
+  }
 ]

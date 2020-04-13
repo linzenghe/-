@@ -8,7 +8,7 @@
         <top-menu :menu-list="menuList" />  <!-- 顶部菜单 -->
         <tags-view v-if="needTagsView" />  <!-- 标签 -->
       </div>
-      <app-main />   <!-- 页面主题 -->
+      <app-main />   <!-- 页面主体 -->
       <right-panel v-if="showSettings">  <!-- 设置 -->
         <settings />
       </right-panel>

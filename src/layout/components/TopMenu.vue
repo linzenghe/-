@@ -1,7 +1,9 @@
 <template>
   <div class="menu">
     <ul class="nav-list">
-      <router-link v-for="(item, index) in menuList" :key="index" :to="item.url" tag="li" class="nav-item" :class="{'active':currentUrl.indexOf(item.url) != -1}">{{ item.title }}</router-link>
+      <li v-for="(item, index) in menuList" :key="index" class="nav-item" :class="{'active':currentUrl.indexOf(item.path) != -1}">
+        <router-link :to="item.path">{{ generateTitle(item.meta?item.meta.title:item.children[0].meta.title) }}</router-link>
+      </li>
     </ul>
     <search id="header-search" class="right-menu-item" />
   </div>
@@ -10,16 +12,15 @@
 <script>
 import { mapGetters } from 'vuex'
 import Search from '@/components/MenuSearch'
+import { isExternal } from '@/utils/validate'
+import { generateTitle } from '@/utils/i18n'
 export default {
   name: 'TopMenu',
   components: {
     Search
   },
   props: {
-    menuList: {
-      type: Array,
-      required: true
-    }
+
   },
   data() {
     return {
@@ -29,7 +30,14 @@ export default {
   computed: {
     ...mapGetters([
       'sidebar'
-    ])
+    ]),
+    menuList() {
+      // const router = this.$store.state.permission.addRoutes
+      // router.map(item => {
+
+      // })
+      return this.$store.state.permission.addRoutes
+    }
   },
   watch: {
     $route: {
@@ -43,7 +51,12 @@ export default {
   created() {
     this.currentUrl = this.$route.path
   },
-  methods: {}
+  methods: {
+    resolvePath(routePath) {
+      return isExternal(routePath)
+    },
+    generateTitle
+  }
 }
 </script>
 

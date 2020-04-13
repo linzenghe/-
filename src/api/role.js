@@ -6,7 +6,13 @@ export function getRoutes() {
     method: 'get'
   })
 }
-
+export function getRoleRoutes(query) {
+  return request({
+    url: '/vue-element-admin/role/routes',
+    method: 'get',
+    query: query
+  })
+}
 export function getRoles() {
   return request({
     url: '/vue-element-admin/roles',

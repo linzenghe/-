@@ -61,7 +61,26 @@ export default [
       }
     }
   },
-
+  {
+    url: '/vue-element-admin/role/routes',
+    type: 'get',
+    response: config => {
+      return {
+        msg: '请求成功',
+        success: true,
+        data: roles[0].routes
+      }
+      // for (const role of roles) {
+      //   if (role.key === config.role) {
+      //     return {
+      //       msg: '请求成功',
+      //       success: true,
+      //       data: role.routes
+      //     }
+      //   }
+      // }
+    }
+  },
   // add role
   {
     url: '/vue-element-admin/role',

@@ -1,4 +1,5 @@
 import { asyncRoutes, constantRoutes } from '@/router'
+import { getRoleRoutes } from '@/api/role'
 
 /**
  * Use meta.role to determine if the current user has permission
@@ -12,7 +13,18 @@ function hasPermission(roles, route) {
     return true
   }
 }
-
+/* 遍历router map */
+function flatten(data) {
+  for (const item of data) {
+    if (item.component) {
+      item.component = require(`../../${item.component}`).default
+    }
+    if (item.children && item.children.length !== 0) {
+      flatten(item.children)
+    }
+  }
+  return data
+}
 /**
  * Filter asynchronous routing tables by recursion
  * @param routes asyncRoutes
@@ -50,13 +62,14 @@ const actions = {
   generateRoutes({ commit }, roles) {
     return new Promise(resolve => {
       let accessedRoutes
-      if (roles.includes('admin')) {
-        accessedRoutes = asyncRoutes || []
-      } else {
-        accessedRoutes = filterAsyncRoutes(asyncRoutes, roles)
-      }
-      commit('SET_ROUTES', accessedRoutes)
-      resolve(accessedRoutes)
+      getRoleRoutes({ role: roles[0] }).then(res => {
+        console.log(res.data)
+        accessedRoutes = flatten(res.data || [])
+        commit('SET_ROUTES', accessedRoutes)
+        resolve(accessedRoutes)
+      }).catch(err => {
+        console.log(err)
+      })
     })
   }
 }

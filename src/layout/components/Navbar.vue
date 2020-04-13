@@ -20,11 +20,11 @@
       <el-dropdown class="avatar-container right-menu-item hover-effect" trigger="click">
         <div class="avatar-wrapper" style="margin-top: 0">
           <!-- <img :src="avatar+'?imageView2/1/w/80/h/80'" class="user-avatar"> -->
-          <span style="font-size:15px">管理员</span>
+          <span style="font-size:15px">{{ userInfo.name }}</span>
           <i class="el-icon-caret-bottom" />
         </div>
         <el-dropdown-menu slot="dropdown">
-          <router-link to="/index">
+          <router-link to="/">
             <el-dropdown-item>
               {{ $t('navbar.dashboard') }}
             </el-dropdown-item>
@@ -42,6 +42,7 @@
 import { mapGetters } from 'vuex'
 import Screenfull from '@/components/Screenfull'
 import LangSelect from '@/components/LangSelect'
+import { generateTitle } from '@/utils/i18n'
 // import Search from '@/components/HeaderSearch'
 import topBg from '@/assets/img/top_bg.png'
 export default {
@@ -70,7 +71,8 @@ export default {
     async logout() {
       await this.$store.dispatch('user/logout')
       this.$router.push(`/login?redirect=${this.$route.fullPath}`)
-    }
+    },
+    generateTitle
   }
 }
 </script>
