@@ -63,7 +63,8 @@ export default {
     clipboardDemo: 'Clipboard',
     i18n: 'I18n',
     externalLink: 'External Link',
-    profile: 'Profile'
+    profile: 'Profile',
+    country: '国家/地区维护'
   },
   navbar: {
     dashboard: 'Dashboard',

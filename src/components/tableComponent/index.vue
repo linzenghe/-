@@ -2,8 +2,10 @@
   <div class="table">
     <el-table
       id="iTable"
+      ref="table"
       v-loading.iTable="options.loading"
-      :height="options.height"
+      :height="auth"
+      :max-height="options.maxHeight"
       :data="data"
       :border="options.border"
       :cell-style="options.cellStyle"
@@ -16,6 +18,7 @@
       <!--endregion-->
       <!--region 数据列-->
       <template v-for="(column, index) in columns">
+
         <el-table-column
           :key="column.label"
           :prop="column.prop"
@@ -23,7 +26,11 @@
           :align="column.align"
           :width="column.width"
         >
+
           <template slot-scope="scope">
+            <template v-if="column.prop == 'index'">
+              <span>{{ scope.$index+1 }}</span>
+            </template>
             <template v-if="!column.render">
               <template v-if="column.formatter">
                 <span v-html="column.formatter(scope.row, column)" />
@@ -51,15 +58,24 @@
         <template slot-scope="scope">
           <span v-for="(btn, key) in operates.list" :key="key">
             <el-button
-              v-if="(typeof btn.show == 'function')?btn.show(key,scope.row):btn.show"
+              v-if="btn.btnType=='btn'"
+              v-show="(typeof btn.show == 'function')?btn.show(key,scope.row):btn.show"
               style="margin: 0 4px;"
               :type="btn.type"
+              :icon="btn.icon"
               size="mini"
               :disabled="(typeof btn.disabled == 'function')?btn.disabled(key,scope.row):btn.disabled"
               :plain="btn.plain"
               @click.native.prevent="btn.method(key,scope.row)"
             >{{ btn.label }}
             </el-button>
+            <i
+              v-else-if="btn.btnType=='icon'"
+              v-show="(typeof btn.show == 'function')?btn.show(key,scope.row):btn.show"
+              :class="btn.icon"
+              style="margin: 0 4px;cursor: pointer;font-size: 17px;"
+              @click="btn.method(key,scope.row)"
+            />
           </span>
         </template>
       </el-table-column>
@@ -114,6 +130,9 @@ export default {
       default() {
         return []
       }
+    },
+    auth: {
+      type: String
     },
     // 需要展示的列 === prop：列数据对应的属性，label：列名，align：对齐方式，width：列宽
     columns: {
@@ -181,4 +200,10 @@ export default {
 };
 </script>
 <style lang="scss">
+  .el-table {
+    th {
+      background-color: #d5ebfa;
+      color: #666;
+    }
+  }
 </style>

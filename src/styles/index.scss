@@ -189,3 +189,19 @@ aside {
 .multiselect--active {
   z-index: 1000 !important;
 }
+
+//btn
+.btn-plain-primary{
+  i{
+    color:#1890ff
+  }
+}
+.btn-plain-success{
+  i{
+    color:#13ce66
+  }
+  &:hover,&:focus,&:active{
+    color:#13ce66!important;
+    border-color: #13ce66!important;
+  }
+}

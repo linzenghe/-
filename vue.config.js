@@ -36,6 +36,15 @@ module.exports = {
       warnings: false,
       errors: true
     },
+    proxy: {
+      '/quickstart': {
+        target: 'http://172.16.0.98:81',
+        changeOrigin: true,
+        pathRewrite: {
+          '^/quickstart': ''
+        }
+      }
+    },
     before: require('./mock/mock-server.js')
   },
   configureWebpack: {

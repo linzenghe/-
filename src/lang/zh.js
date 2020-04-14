@@ -62,7 +62,8 @@ export default {
     clipboardDemo: 'Clipboard',
     i18n: '国际化',
     externalLink: '外链',
-    profile: '个人中心'
+    profile: '个人中心',
+    country: '国家/地区维护'
   },
   navbar: {
     dashboard: '首页',

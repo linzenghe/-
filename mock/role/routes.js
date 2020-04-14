@@ -114,5 +114,18 @@ export const asyncRoutes = [
         meta: { title: 'errorLog', icon: 'bug' }
       }
     ]
+  },
+  {
+    path: '/nation',
+    component: 'layout',
+    redirect: '/nation/index',
+    children: [
+      {
+        path: 'index',
+        component: 'views/nation/index',
+        name: 'Nation',
+        meta: { title: 'country', icon: 'bug' }
+      }
+    ]
   }
 ]
