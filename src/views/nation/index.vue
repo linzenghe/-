@@ -29,7 +29,7 @@
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col :xs="8" :md="8" :lg="6">
+          <el-col :xs="24" :md="24" :lg="6">
             <el-button type="primary" @click="handleSearch">查 询</el-button>
             <el-button type="default" @click="moreFn">更多条件</el-button>
             <el-button type="default" icon="el-icon-refresh-right" @click="resetFn">重 置</el-button>

@@ -7,6 +7,13 @@ export function fetchList(query) {
     params: query
   })
 }
+export function fetchCodeList(query) {
+  return request({
+    url: '/vue-element-admin/code/list',
+    method: 'get',
+    params: query
+  })
+}
 
 export function fetchArticle(id) {
   return request({

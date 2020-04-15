@@ -1,6 +1,49 @@
 import Mock from 'mockjs'
 
 const List = []
+const codeList = [
+  {
+    id: 1,
+    code: 'AR/AR',
+    nameEn: 'ARGENTINA/ARGENTINA',
+    team: '散货船-HKMW',
+    status: 1,
+    modifier: 'admin',
+    modifierTime: '2013-10-08 14:04'
+  }, {
+    id: 2,
+    code: 'AR/AR',
+    nameEn: 'ARGENTINA/ARGENTINA',
+    team: '散货船-HKMW',
+    status: 1,
+    modifier: 'admin',
+    modifierTime: '2013-10-08 14:04'
+  }, {
+    id: 3,
+    code: 'AR/AR',
+    nameEn: 'ARGENTINA/ARGENTINA',
+    team: '散货船-HKMW',
+    status: 1,
+    modifier: 'admin',
+    modifierTime: '2013-10-08 14:04'
+  }, {
+    id: 4,
+    code: 'AR/AR',
+    nameEn: 'ARGENTINA/ARGENTINA',
+    team: '散货船-HKMW',
+    status: 1,
+    modifier: 'admin',
+    modifierTime: '2013-10-08 14:04'
+  }, {
+    id: 5,
+    code: 'AR/AR',
+    nameEn: 'ARGENTINA/ARGENTINA',
+    team: '散货船-HKMW',
+    status: 1,
+    modifier: 'admin',
+    modifierTime: '2013-10-08 14:04'
+  }
+]
 const count = 100
 
 const baseContent = '<p>I am testing data, I am testing data.</p><p><img src="https://wpimg.wallstcn.com/4c69009c-0fd4-4153-b112-6cb53d1cf943"></p>'
@@ -40,6 +83,31 @@ export default [
         if (title && item.title.indexOf(title) < 0) return false
         return true
       })
+
+      if (sort === '-id') {
+        mockList = mockList.reverse()
+      }
+
+      const pageList = mockList.filter((item, index) => index < limit * page && index >= limit * (page - 1))
+
+      return {
+        msg: '请求成功',
+        success: true,
+        data: {
+          total: mockList.length,
+          items: pageList
+        }
+      }
+    }
+  },
+
+  {
+    url: '/vue-element-admin/code/list',
+    type: 'get',
+    response: config => {
+      const { importance, type, title, page = 1, limit = 20, sort } = config.query
+
+      let mockList = codeList
 
       if (sort === '-id') {
         mockList = mockList.reverse()

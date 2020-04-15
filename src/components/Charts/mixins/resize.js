@@ -35,7 +35,7 @@ export default {
     },
     initListener() {
       this.$_resizeHandler = debounce(() => {
-        this.resize()
+        this.resize();
       }, 100)
       window.addEventListener('resize', this.$_resizeHandler)
 
