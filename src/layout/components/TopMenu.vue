@@ -32,10 +32,6 @@ export default {
       'sidebar'
     ]),
     menuList() {
-      // const router = this.$store.state.permission.addRoutes
-      // router.map(item => {
-
-      // })
       return this.$store.state.permission.addRoutes
     }
   },
