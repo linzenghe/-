@@ -114,35 +114,35 @@ export const asyncRoutes = [
         meta: { title: 'errorLog', icon: 'bug' }
       }
     ]
+  },
+  {
+    path: '/nation',
+    component: 'layout',
+    redirect: '/nation/index',
+    meta: { title: '标准化代码', icon: 'bug' },
+    alwaysShow: true,
+    children: [
+      {
+        path: 'index',
+        component: 'views/nation/index',
+        name: 'Nation',
+        meta: { title: '国家地址信息', icon: 'bug' }
+      }
+    ]
+  },
+  {
+    path: '/system',
+    component: 'layout',
+    redirect: '/system/index',
+    meta: { title: '系统管理', icon: 'bug' },
+    alwaysShow: true,
+    children: [
+      {
+        path: 'index',
+        component: 'views/system/index',
+        name: 'System',
+        meta: { title: '航线代码', icon: 'bug' }
+      }
+    ]
   }
-  // {
-  //   path: '/nation',
-  //   component: 'layout',
-  //   redirect: '/nation/index',
-  //   meta: { title: '标准化代码', icon: 'bug' },
-  //   alwaysShow: true,
-  //   children: [
-  //     {
-  //       path: 'index',
-  //       component: 'views/nation/index',
-  //       name: 'Nation',
-  //       meta: { title: '国家地址信息', icon: 'bug' }
-  //     }
-  //   ]
-  // },
-  // {
-  //   path: '/system',
-  //   component: 'layout',
-  //   redirect: '/system/index',
-  //   meta: { title: '系统管理', icon: 'bug' },
-  //   alwaysShow: true,
-  //   children: [
-  //     {
-  //       path: 'index',
-  //       component: 'views/system/index',
-  //       name: 'System',
-  //       meta: { title: '航线代码', icon: 'bug' }
-  //     }
-  //   ]
-  // }
 ]
