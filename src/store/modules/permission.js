@@ -1,6 +1,6 @@
-import { asyncRoutes, constantRoutes } from '@/router'
+import { constantRoutes } from '@/router'
 import { getRoleRoutes } from '@/api/role'
-
+import Layout from '@/layout'
 /**
  * Use meta.role to determine if the current user has permission
  * @param roles
@@ -17,7 +17,13 @@ function hasPermission(roles, route) {
 function flatten(data) {
   for (const item of data) {
     if (item.component) {
-      item.component = require(`../../${item.component}`).default
+      if (item.component === 'layout') {
+        item['component'] = Layout
+      } else {
+        let sub_view = item.component
+        sub_view = sub_view.replace(/^\/*/g, '')
+        item.component = require(`@/views/${sub_view}`).default
+      }
     }
     if (item.children && item.children.length !== 0) {
       flatten(item.children)
@@ -25,6 +31,7 @@ function flatten(data) {
   }
   return data
 }
+
 /**
  * Filter asynchronous routing tables by recursion
  * @param routes asyncRoutes
@@ -63,8 +70,8 @@ const actions = {
     return new Promise(resolve => {
       let accessedRoutes
       getRoleRoutes({ role: roles[0] }).then(res => {
-        console.log(res.data)
         accessedRoutes = flatten(res.data || [])
+        console.log(accessedRoutes)
         commit('SET_ROUTES', accessedRoutes)
         resolve(accessedRoutes)
       }).catch(err => {

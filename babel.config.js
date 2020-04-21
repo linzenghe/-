@@ -3,4 +3,5 @@ module.exports = {
     '@vue/app'
   ],
   sourceType: 'unambiguous' // TODO:commonjs module 冲突
+
 }

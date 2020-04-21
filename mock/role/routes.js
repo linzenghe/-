@@ -17,7 +17,7 @@ export const asyncRoutes = [
     children: [
       {
         path: 'menu',
-        component: 'views/permission/menu',
+        component: '/permission/menu',
         name: 'PagePermission',
         meta: {
           title: 'pagePermission'
@@ -25,7 +25,7 @@ export const asyncRoutes = [
       },
       {
         path: 'directive',
-        component: 'views/permission/directive',
+        component: '/permission/directive',
         name: 'DirectivePermission',
         meta: {
           title: 'directivePermission'
@@ -33,7 +33,7 @@ export const asyncRoutes = [
       },
       {
         path: 'role',
-        component: 'views/permission/role',
+        component: '/permission/role',
         name: 'RolePermission',
         meta: {
           title: 'rolePermission',
@@ -54,33 +54,33 @@ export const asyncRoutes = [
     children: [
       {
         path: 'menu1',
-        component: 'views/nested/menu1/index',
+        component: '/nested/menu1/index',
         name: 'Menu1',
         meta: { title: 'menu1' },
         redirect: '/nested/menu1/menu1-1',
         children: [
           {
             path: 'menu1-1',
-            component: 'views/nested/menu1/menu1-1',
+            component: '/nested/menu1/menu1-1',
             name: 'Menu1-1',
             meta: { title: 'menu1-1' }
           },
           {
             path: 'menu1-2',
-            component: 'views/nested/menu1/menu1-2',
+            component: '/nested/menu1/menu1-2',
             name: 'Menu1-2',
             redirect: '/nested/menu1/menu1-2/menu1-2-1',
             meta: { title: 'menu1-2' },
             children: [
               {
                 path: 'menu1-2-1',
-                component: 'views/nested/menu1/menu1-2/menu1-2-1',
+                component: '/nested/menu1/menu1-2/menu1-2-1',
                 name: 'Menu1-2-1',
                 meta: { title: 'menu1-2-1' }
               },
               {
                 path: 'menu1-2-2',
-                component: 'views/nested/menu1/menu1-2/menu1-2-2',
+                component: '/nested/menu1/menu1-2/menu1-2-2',
                 name: 'Menu1-2-2',
                 meta: { title: 'menu1-2-2' }
               }
@@ -88,7 +88,7 @@ export const asyncRoutes = [
           },
           {
             path: 'menu1-3',
-            component: 'views/nested/menu1/menu1-3',
+            component: '/nested/menu1/menu1-3',
             name: 'Menu1-3',
             meta: { title: 'menu1-3' }
           }
@@ -97,7 +97,7 @@ export const asyncRoutes = [
       {
         path: 'menu2',
         name: 'Menu2',
-        component: 'views/nested/menu2/index',
+        component: '/nested/menu2/index',
         meta: { title: 'menu2' }
       }
     ]
@@ -109,7 +109,7 @@ export const asyncRoutes = [
     children: [
       {
         path: 'log',
-        component: 'views/error-log/index',
+        component: '/error-log/index',
         name: 'ErrorLog',
         meta: { title: 'errorLog', icon: 'bug' }
       }
@@ -124,7 +124,7 @@ export const asyncRoutes = [
     children: [
       {
         path: 'index',
-        component: 'views/nation/index',
+        component: '/nation/index',
         name: 'Nation',
         meta: { title: '国家地址信息', icon: 'bug' }
       }
@@ -139,7 +139,7 @@ export const asyncRoutes = [
     children: [
       {
         path: 'index',
-        component: 'views/system/index',
+        component: '/system/index',
         name: 'System',
         meta: { title: '航线代码', icon: 'bug' }
       }
